@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TFHS Portal – Tools</title>
+<style>
+:root{
+ --navy:#12263f;--navy2:#1c3a5e;--paper:#f5f3ee;--card:#fff;--ink:#1b2430;--mute:#66707d;
+ --line:#dcd8cf;--gold:#b7791f;--focus:#1c6ed5;
+ --c1:#1c5d99;--c2:#2f7d5b;--c3:#9a4d1a;--c4:#6b3fa0;
+}
+@media (prefers-color-scheme:dark){
+ :root{--paper:#0f1722;--card:#17222f;--ink:#e8ecf1;--mute:#98a3b0;--line:#2a384a;--gold:#e0a84a;--focus:#6aa8ff;
+ --c1:#6aa8ff;--c2:#5fc79a;--c3:#e29a63;--c4:#b99cf0}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+/* header */
+.top{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold)}
+.top .in{max-width:1180px;margin:auto;padding:22px 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.mark{width:52px;height:52px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;font:700 19px Georgia,serif;border:3px solid var(--gold);flex:none}
+.top h1{margin:0;font:600 1.45rem/1.2 Georgia,"Times New Roman",serif;letter-spacing:.2px}
+.top p{margin:2px 0 0;color:#b9c6d6;font-size:.88rem}
+.top .sp{flex:1}
+.top .meta{color:#b9c6d6;font-size:.85rem;text-align:right}
+/* layout */
+.wrap{max-width:1180px;margin:auto;padding:22px 20px 40px;display:grid;grid-template-columns:230px 1fr;gap:26px}
+nav.cats{position:sticky;top:14px;align-self:start}
+nav.cats h2{font-size:.8rem;margin:0 0 8px;color:var(--mute);font-weight:600}
+nav.cats button{display:flex;justify-content:space-between;width:100%;padding:9px 12px;margin-bottom:4px;border:0;border-left:3px solid transparent;border-radius:0 6px 6px 0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+nav.cats button:hover{background:var(--card)}
+nav.cats button[aria-pressed=true]{background:var(--card);border-left-color:var(--gold);font-weight:600}
+nav.cats .n{color:var(--mute);font-weight:400}
+.bar{display:flex;gap:10px;margin-bottom:16px}
+#q{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+.btn{padding:0 16px;border:1px solid var(--navy2);background:var(--navy2);color:#fff;border-radius:8px;font:inherit;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.sec h3{margin:22px 0 10px;font:600 1.05rem Georgia,serif;display:flex;gap:10px;align-items:baseline}
+.sec h3 span{font:400 .8rem system-ui;color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+a.card{display:flex;gap:12px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;color:inherit;text-decoration:none;transition:border-color .15s,transform .15s}
+a.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.ic{width:42px;height:42px;border-radius:9px;flex:none;display:grid;place-items:center;color:#fff;font-weight:700;font-size:.95rem}
+.k0{background:var(--c1)}.k1{background:var(--c2)}.k2{background:var(--c3)}.k3{background:var(--c4)}
+@media (prefers-color-scheme:dark){.ic{color:#0f1722}}
+.card b{display:block;font-weight:600}
+.card em{display:block;font-style:normal;color:var(--mute);font-size:.84rem;margin-top:2px}
+.card small{display:block;color:var(--mute);font-size:.72rem;margin-top:6px;word-break:break-all}
+#none{display:none;color:var(--mute);padding:30px 0}
+footer{max-width:1180px;margin:auto;padding:0 20px 30px;color:var(--mute);font-size:.82rem}
+/* dialog */
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);width:min(520px,92vw);padding:22px}
+dialog::backdrop{background:rgba(10,18,30,.55)}
+dialog h4{margin:0 0 4px;font:600 1.15rem Georgia,serif}
+dialog p{margin:0 0 14px;color:var(--mute);font-size:.88rem}
+label{display:block;margin:10px 0 4px;font-size:.85rem;font-weight:600}
+dialog input,dialog select,dialog textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit}
+dialog textarea{font:.82rem ui-monospace,Consolas,monospace;min-height:64px}
+.row{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.row .btn{padding:10px 16px}
+@media (max-width:760px){
+ .wrap{grid-template-columns:1fr;gap:12px}
+ nav.cats{position:static;display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+ nav.cats h2{display:none}
+ nav.cats button{width:auto;white-space:nowrap;border:1px solid var(--line);border-radius:20px;margin:0}
+ nav.cats button[aria-pressed=true]{border-color:var(--gold)}
+ .top .meta{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+ <div class="mark" aria-hidden="true">TFHS</div>
+ <div>
+  <h1>Taldangra Fulmati High School (H.S.)</h1>
+  <p>Administrative Tools Portal · Taldangra, Bankura</p>
+ </div>
+ <div class="sp"></div>
+ <div class="meta"><span id="count"></span> tools available</div>
+</div></header>
+
+<div class="wrap">
+ <nav class="cats" id="cats" aria-label="Categories"><h2>Categories</h2></nav>
+ <main>
+  <div class="bar">
+   <input id="q" type="search" placeholder="Search tools by name or purpose" aria-label="Search tools" autocomplete="off">
+   <button class="btn ghost" id="addBtn" type="button">Add tool</button>
+  </div>
+  <div id="list"></div>
+  <p id="none">No tool matches your search.</p>
+ </main>
+</div>
+<footer>To add a tool permanently, paste its line into the TOOLS list at the top of this file's script.</footer>
+
+<dialog id="dlg">
+ <h4>Add a new tool</h4>
+ <p>Fill the form, copy the line, and paste it inside TOOLS in this file. Upload the file to GitHub again.</p>
+ <label for="fRepo">Repo name or full link</label>
+ <input id="fRepo" placeholder="e.g. new_tool  or  https://script.google.com/...">
+ <label for="fName">Display name</label>
+ <input id="fName" placeholder="e.g. Admission Register">
+ <label for="fCat">Category</label>
+ <select id="fCat"></select>
+ <label for="fDesc">One-line purpose</label>
+ <input id="fDesc" placeholder="e.g. Record new admissions and print receipts">
+ <label for="fOut">Line to paste</label>
+ <textarea id="fOut" readonly></textarea>
+ <div class="row">
+  <button class="btn ghost" id="fClose" type="button">Close</button>
+  <button class="btn" id="fCopy" type="button">Copy line</button>
+ </div>
+</dialog>
+
+<script>
+/* ===== EDIT HERE: one line per tool =====
+   [ "repo-name or full https link", "Display name", "Category", "Short purpose" ]  */
+const BASE = "https://prabirdangar-web.github.io/";
+const CATS = ["Certificates & Students","Accounts & Audit","Salary, Tax & Pay Fixation","Service, Leave & Pension"];
+const TOOLS = [
+ ["certificate","Certificates","Certificates & Students","Bonafide, character and other certificates"],
+ ["hs_leaving","H.S. Leaving Certificate","Certificates & Students","Leaving certificate for H.S. students"],
+ ["hs_pass_certificate","H.S. Pass Certificate","Certificates & Students","Pass certificate for H.S. students"],
+ ["letter_head","Letter Head","Certificates & Students","Official school letter head"],
+ ["file_cover","File Cover","Certificates & Students","Printable file covers"],
+ ["outside-pad","Outside Pad","Certificates & Students","Outside pad printing"],
+ ["library_book","Library Book","Certificates & Students","Library book register"],
+ ["para_teacher","Para Teacher","Certificates & Students","Para teacher records"],
+ ["xi_mp_test","XI MP Test","Certificates & Students","Class XI test records"],
+ ["MP_TEST","MP Test","Certificates & Students","Madhyamik pre-test records"],
+ ["si_tal","SI Tal","Certificates & Students","SI Tal records"],
+
+ ["payment","Payment","Accounts & Audit","Payment vouchers and records"],
+ ["MDM","MDM","Accounts & Audit","Mid-day meal accounts"],
+ ["cash_auditable","Cash Book (Auditable)","Accounts & Audit","Cash book for audit"],
+ ["non_auditable","Cash Book (Non-auditable)","Accounts & Audit","Cash book outside audit"],
+ ["NEW-APPROVAL","New Approval","Accounts & Audit","Approval records"],
+
+ ["salary","Salary","Salary, Tax & Pay Fixation","Monthly salary statement"],
+ ["salary-da-hike","Salary DA Hike","Salary, Tax & Pay Fixation","Salary with DA increase"],
+ ["salary-da-hike-ropa-19","Salary DA Hike ROPA-19","Salary, Tax & Pay Fixation","DA increase under ROPA-19"],
+ ["ropa09_da_hike","ROPA-09 DA Hike","Salary, Tax & Pay Fixation","DA increase under ROPA-09"],
+ ["ropa-09-vs-19","ROPA-09 vs 19","Salary, Tax & Pay Fixation","Compare ROPA-09 and ROPA-19"],
+ ["pay_fixation_arrear","Pay Fixation Arrear","Salary, Tax & Pay Fixation","Pay fixation and arrear calculation"],
+ ["sb_arrear_od_da","SB Arrear OD DA","Salary, Tax & Pay Fixation","Service book arrear and DA"],
+ ["itax_2026-27_fy","Income Tax FY 2026-27","Salary, Tax & Pay Fixation","Income tax calculator"],
+ ["itax_staff","Income Tax Staff","Salary, Tax & Pay Fixation","Income tax for staff"],
+ ["staff_itax","Staff Income Tax","Salary, Tax & Pay Fixation","Staff income tax statements"],
+ ["pf_interest","PF Interest","Salary, Tax & Pay Fixation","Provident fund interest"],
+ ["GPF","GPF","Salary, Tax & Pay Fixation","GPF final payment documents"],
+ ["at_hm_higher_scale-sb","HM Higher Scale","Salary, Tax & Pay Fixation","Headmaster higher scale"],
+
+ ["SERVICE-BOOK","Service Book","Service, Leave & Pension","Employee service book"],
+ ["service_continuation","Service Continuation","Service, Leave & Pension","Service continuation records"],
+ ["staff_pattern_noc_exp","Staff Pattern, NOC, Experience","Service, Leave & Pension","Staff pattern, NOC and experience certificates"],
+ ["e-leave-application","E-Leave Application","Service, Leave & Pension","Staff leave applications"],
+ ["all_leave","All Leave","Service, Leave & Pension","Leave account of all staff"],
+ ["pension_data_collection","Pension Data Collection","Service, Leave & Pension","Collect staff pension data"],
+ ["pension_rop19_da_hike","Pension ROP-19 DA Hike","Service, Leave & Pension","Pension with ROP-19 DA increase"],
+ ["wbpension","WB Pension","Service, Leave & Pension","West Bengal pension papers"],
+ ["wb_pen","WB Pen","Service, Leave & Pension","Pension calculation"]
+];
+/* ===== end of editable part ===== */
+
+const $=id=>document.getElementById(id);
+const urlOf=r=>/^https?:\/\//.test(r)?r:BASE+r+"/";
+const initials=n=>n.replace(/[^A-Za-z0-9 ]/g," ").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+let cat="All",term="";
+
+function renderCats(){
+ const nav=$("cats");nav.querySelectorAll("button").forEach(b=>b.remove());
+ [["All",TOOLS.length],...CATS.map(c=>[c,TOOLS.filter(t=>t[2]===c).length])].forEach(([c,n])=>{
+  const b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed",c===cat);
+  b.innerHTML="<span>"+c+"</span><span class='n'>"+n+"</span>";
+  b.onclick=()=>{cat=c;renderCats();renderList()};nav.appendChild(b);
+ });
+}
+function renderList(){
+ const box=$("list");box.innerHTML="";let shown=0;
+ CATS.forEach((c,ci)=>{
+  if(cat!=="All"&&cat!==c)return;
+  const items=TOOLS.filter(t=>t[2]===c&&(t[0]+" "+t[1]+" "+t[3]).toLowerCase().includes(term));
+  if(!items.length)return;shown+=items.length;
+  const s=document.createElement("section");s.className="sec";
+  s.innerHTML="<h3>"+c+" <span>"+items.length+"</span></h3><div class='grid'>"+items.map(t=>
+   "<a class='card' target='_blank' rel='noopener' href='"+urlOf(t[0])+"'><div class='ic k"+(ci%4)+"'>"+initials(t[1])+"</div><div><b>"+t[1]+"</b><em>"+t[3]+"</em><small>"+urlOf(t[0]).replace("https://","")+"</small></div></a>").join("")+"</div>";
+  box.appendChild(s);
+ });
+ $("none").style.display=shown?"none":"block";
+}
+$("count").textContent=TOOLS.length;
+$("q").addEventListener("input",e=>{term=e.target.value.trim().toLowerCase();renderList()});
+renderCats();renderList();
+
+/* add-tool helper */
+CATS.forEach(c=>{const o=document.createElement("option");o.textContent=c;$("fCat").appendChild(o)});
+function gen(){
+ const q=s=>JSON.stringify(s.trim());
+ $("fOut").value=$("fRepo").value.trim()?' ['+q($("fRepo").value)+','+q($("fName").value||"New tool")+','+q($("fCat").value)+','+q($("fDesc").value)+'],':"";
+}
+["fRepo","fName","fCat","fDesc"].forEach(i=>$(i).addEventListener("input",gen));
+$("addBtn").onclick=()=>{$("dlg").showModal();gen()};
+$("fClose").onclick=()=>$("dlg").close();
+$("fCopy").onclick=async()=>{
+ try{await navigator.clipboard.writeText($("fOut").value);$("fCopy").textContent="Copied"}
+ catch(e){$("fOut").select();document.execCommand("copy");$("fCopy").textContent="Copied"}
+ setTimeout(()=>$("fCopy").textContent="Copy line",1500);
+};
+</script>
+</body>
+</html>
