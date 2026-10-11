@@ -79,6 +79,32 @@ dialog textarea{font:.82rem ui-monospace,Consolas,monospace;min-height:64px}
  nav.cats button[aria-pressed=true]{border-color:var(--gold)}
  .top .meta{display:none}
 }
+/* mobile category dropdown + collapsible sections */
+#catSel{display:none;width:100%;padding:12px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit}
+.sec summary{list-style:none;cursor:default}
+.sec summary::-webkit-details-marker{display:none}
+@media (max-width:760px){
+ nav.cats{display:none}
+ #catSel{display:block;font-size:16px}
+ .wrap{padding:14px 12px 28px}
+ .top .in{padding:14px 12px;gap:12px}
+ .mark{width:42px;height:42px;font-size:15px}
+ .top h1{font-size:1.1rem}
+ .top p{font-size:.8rem}
+ .bar{margin-bottom:10px}
+ #q{padding:13px 14px;font-size:16px}
+ .sec{margin-bottom:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+ .sec summary{cursor:pointer;padding:14px 16px;display:flex;align-items:center}
+ .sec summary h3{margin:0;flex:1;font-size:1rem}
+ .sec summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);margin:-4px 4px 0 10px;transition:transform .2s}
+ .sec[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+ .sec[open] summary{border-bottom:1px solid var(--line)}
+ .grid{grid-template-columns:1fr;gap:8px;padding:10px}
+ a.card{padding:12px;align-items:center;min-height:64px;background:var(--paper)}
+ a.card small{display:none}
+ .ic{width:40px;height:40px}
+ footer{padding:0 14px 24px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -96,6 +122,7 @@ dialog textarea{font:.82rem ui-monospace,Consolas,monospace;min-height:64px}
 <div class="wrap">
  <nav class="cats" id="cats" aria-label="Categories"><h2>Categories</h2></nav>
  <main>
+  <select id="catSel" aria-label="Choose category"></select>
   <div class="bar">
    <input id="q" type="search" placeholder="Search tools by name or purpose" aria-label="Search tools" autocomplete="off">
    <button class="btn ghost" id="addBtn" type="button">Add tool</button>
@@ -166,15 +193,18 @@ const TOOLS = [
 const $=id=>document.getElementById(id);
 const urlOf=r=>/^https?:\/\//.test(r)?r:BASE+r+"/";
 const initials=n=>n.replace(/[^A-Za-z0-9 ]/g," ").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
+const isMob=()=>matchMedia("(max-width:760px)").matches;
 let cat="All",term="";
 
 function renderCats(){
  const nav=$("cats");nav.querySelectorAll("button").forEach(b=>b.remove());
- [["All",TOOLS.length],...CATS.map(c=>[c,TOOLS.filter(t=>t[2]===c).length])].forEach(([c,n])=>{
+ const CL=[["All",TOOLS.length],...CATS.map(c=>[c,TOOLS.filter(t=>t[2]===c).length])];
+ CL.forEach(([c,n])=>{
   const b=document.createElement("button");b.type="button";b.setAttribute("aria-pressed",c===cat);
   b.innerHTML="<span>"+c+"</span><span class='n'>"+n+"</span>";
   b.onclick=()=>{cat=c;renderCats();renderList()};nav.appendChild(b);
  });
+ $("catSel").innerHTML=CL.map(([c,n])=>"<option value=\""+c+"\""+(c===cat?" selected":"")+">"+(c==="All"?"All categories":c)+" ("+n+")</option>").join("");
 }
 function renderList(){
  const box=$("list");box.innerHTML="";let shown=0;
@@ -182,14 +212,17 @@ function renderList(){
   if(cat!=="All"&&cat!==c)return;
   const items=TOOLS.filter(t=>t[2]===c&&(t[0]+" "+t[1]+" "+t[3]).toLowerCase().includes(term));
   if(!items.length)return;shown+=items.length;
-  const s=document.createElement("section");s.className="sec";
-  s.innerHTML="<h3>"+c+" <span>"+items.length+"</span></h3><div class='grid'>"+items.map(t=>
+  const s=document.createElement("details");s.className="sec";s.open=!isMob()||!!term||cat!=="All";
+  s.innerHTML="<summary><h3>"+c+" <span>"+items.length+"</span></h3></summary><div class='grid'>"+items.map(t=>
    "<a class='card' target='_blank' rel='noopener' href='"+urlOf(t[0])+"'><div class='ic k"+(ci%4)+"'>"+initials(t[1])+"</div><div><b>"+t[1]+"</b><em>"+t[3]+"</em><small>"+urlOf(t[0]).replace("https://","")+"</small></div></a>").join("")+"</div>";
+  s.querySelector("summary").addEventListener("click",ev=>{if(!isMob())ev.preventDefault()});
   box.appendChild(s);
  });
  $("none").style.display=shown?"none":"block";
 }
 $("count").textContent=TOOLS.length;
+$("catSel").addEventListener("change",e=>{cat=e.target.value;renderCats();renderList()});
+matchMedia("(max-width:760px)").addEventListener("change",renderList);
 $("q").addEventListener("input",e=>{term=e.target.value.trim().toLowerCase();renderList()});
 renderCats();renderList();
 
