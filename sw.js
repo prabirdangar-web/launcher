@@ -1,7 +1,7 @@
 /* TFHS Portal service worker.
    Only caches the portal shell. Every other request (other tools on this
    domain, Firebase, Google Apps Script, etc.) passes straight through. */
-const CACHE = "tfhs-portal-v2";
+const CACHE = "tfhs-portal-v4";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 const shellUrls = SHELL.map(p => new URL(p, self.location).href);
 
